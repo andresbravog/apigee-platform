@@ -32,8 +32,8 @@ class MortalKombatCharacter
   end
 
   def self.prefix_options
-    {:version => :mk_id} 
-  end  
+    {:version => :mk_id}
+  end
 
   def self.find(*args)
     x = self.new
@@ -46,10 +46,11 @@ class MortalKombatCharacter
   end
 
   def maps
-    [ 
-      OpenStruct.new(:attributes => {:name => 'Kuatan'}), 
-      OpenStruct.new(:attributes => {:name => 'Street'}), 
-      OpenStruct.new(:attributes => {:name => 'Swamp'})]
+    [
+      OpenStruct.new(:attributes => {:name => 'Kuatan'}),
+      OpenStruct.new(:attributes => {:name => 'Street'}),
+      OpenStruct.new(:attributes => {:name => 'Swamp'})
+    ]
   end
 end
 
@@ -59,7 +60,7 @@ class MortalKombatCharacterLocation
     params.each{|k,v| instance_variable_set("@#{k}", v)}
   end
 
-  def self.prefix_options 
+  def self.prefix_options
     {:char_id => :char_id}
   end
 
@@ -69,9 +70,9 @@ class MortalKombatCharacterLocation
 end
 
 
-describe 'class with has_many association' do 
+describe 'class with has_many association' do
   subject { MortalKombat.new }
-  it 'can find all nested objects' do 
+  it 'can find all nested objects' do
     subject.should respond_to(:characters)
     subject.characters.should be_kind_of(Array)
   end

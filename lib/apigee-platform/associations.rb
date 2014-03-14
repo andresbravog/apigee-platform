@@ -1,12 +1,10 @@
 module ApigeePlatform
   module Associations
-
     def self.included(base)
       base.extend ClassMethods
     end
 
     module ClassMethods
-
       def has_many(*args)
         klass_sym = args.first.to_sym
         options = args.extract_options!
@@ -16,17 +14,17 @@ module ApigeePlatform
         instance_eval do
           define_method "#{klass_sym}" do |scope = :all|
             klass = klass_name.constantize
-            prefix_params = klass.prefix_options.inject({}) do |res,pair| 
+            prefix_params = klass.prefix_options.reduce({}) do |res, pair|
               res[pair.first] = self.send(options[pair.first] || pair.last)
-              res 
+              res
             end
 
             if options[:through].present?
               self.send(options[:through]).map do |el|
                 klass.instantiate_record(el.attributes, prefix_params)
               end
-            else 
-              klass.find scope, :params => prefix_params
+            else
+              klass.find scope, params: prefix_params
             end
           end
 
@@ -38,14 +36,16 @@ module ApigeePlatform
             end
           end
 
-          define_method "create_#{klass_sym.to_s.singularize}" do |params={}|
+          define_method "create_#{klass_sym.to_s.singularize}" do |params = {}|
             klass = klass_name.constantize
-            prefix_params = klass.prefix_options.inject({}){|res,pair| res[pair.last] = self.send(options[pair.first] || pair.last); res }
+            prefix_params = klass.prefix_options.reduce({}) do |res, pair|
+              res[pair.last] = self.send(options[pair.first] || pair.last)
+              res
+            end
             klass.new params.merge(prefix_params)
           end
 
         end
-
       end
 
       def belongs_to(*args)
@@ -62,9 +62,7 @@ module ApigeePlatform
             klass.find self.send(id_key)
           end
         end
-
       end
     end
-
   end
 end
